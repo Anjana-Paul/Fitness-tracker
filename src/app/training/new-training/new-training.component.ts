@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 import 'rxjs/add/operator/map'
+import { UIService } from 'src/app/shared/ui.service';
 
 
 @Component({
@@ -13,15 +14,28 @@ import 'rxjs/add/operator/map'
 })
 export class NewTrainingComponent implements OnInit, OnDestroy {
   exercises: Exercise[];
-  exerciseSubscription: Subscription;
+  private exerciseSubscription: Subscription;
+  private loadingSubscription : Subscription;
+  isLoading = true;
 
-  constructor(private trainingService : TrainingService) { }
+  constructor(private trainingService : TrainingService, private uiService: UIService) { }
 
   ngOnInit() {
-    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => (this.exercises = exercises));
-    this.trainingService.fetchAvailableExercises();
+    this.loadingSubscription = this.uiService.loadingStateChanged.subscribe(
+      isLoading => {
+        this.isLoading = isLoading;
+      }
+    );
+    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(
+      exercises =>{
+        this.exercises = exercises
+      });
+    this.fetchExercises();
   }
 
+    fetchExercises(){
+      this.trainingService.fetchAvailableExercises();
+    }
 
   onStartTraining(form: NgForm) {
     this.trainingService.startExercise(form.value.exercise);
@@ -30,5 +44,6 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.exerciseSubscription.unsubscribe();
+    this.loadingSubscription.unsubscribe();
   }
 }

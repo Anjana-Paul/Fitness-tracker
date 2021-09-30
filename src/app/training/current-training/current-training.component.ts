@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { TrainingService } from '../training.service';
 import { Store } from '@ngrx/store';
-import * as fromTraining from '../training.reducer';
-import { StopTrainingComponent } from './stop-training.component';
 import { take } from 'rxjs/operators';
+
+import { StopTrainingComponent } from './stop-training.component';
+import { TrainingService } from '../training.service';
+import * as fromTraining from '../training.reducer';
 @Component({
   selector: 'app-current-training',
   templateUrl: './current-training.component.html',
@@ -12,7 +13,7 @@ import { take } from 'rxjs/operators';
 })
 export class CurrentTrainingComponent implements OnInit {
   progress = 0;
-  timer:any;
+  timer: any;
   constructor(private dialog: MatDialog,
      private trainingService: TrainingService,
      private store : Store<fromTraining.State>) { }
@@ -31,7 +32,7 @@ export class CurrentTrainingComponent implements OnInit {
           clearInterval(this.timer);
         }
       }, step);
-    })
+    });
   }
 
   onStop() {

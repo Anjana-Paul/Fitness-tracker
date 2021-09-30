@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/map';
-import { take } from 'rxjs/operators';
 
 import { Exercise } from './exercise.model';
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
-import * as fromTraining from './training.reducer';
 import * as Training from './training.actions';
+import * as fromTraining from './training.reducer';
 
 @Injectable()
 export class TrainingService {
@@ -60,18 +60,18 @@ export class TrainingService {
   }
 
   completeExercise() {
-    this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe(ex=> {
+    this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe(ex => {
       this.addDataToDatabase({
-            ...ex,
-            date: new Date(),
-            state: 'completed'
-          });
-          this.store.dispatch(new Training.StopTraining());
+        ...ex,
+        date: new Date(),
+        state: 'completed'
+      });
+      this.store.dispatch(new Training.StopTraining());
     });
   }
 
   cancelExercise(progress: number) {
-    this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe(ex=> {
+    this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe(ex => {
       this.addDataToDatabase({
         ...ex,
         duration: ex.duration * (progress / 100),
@@ -89,7 +89,7 @@ export class TrainingService {
         .collection('finishedExercises')
         .valueChanges()
         .subscribe((exercises: Exercise[]) => {
-          this.store.dispatch(new Training.SetAvailableTrainings(exercises));
+          this.store.dispatch(new Training.SetFinishedTrainings(exercises));//bug occured n fixed
         })
     );
   }

@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
+import { UIService } from '../../shared/ui.service';
 import * as fromTraining from '../training.reducer';
 import * as fromRoot from '../../app.reducer';
 
@@ -20,6 +21,7 @@ export class NewTrainingComponent implements OnInit {
 
   constructor(
     private trainingService: TrainingService,
+    private uiService: UIService,
     private store: Store<fromTraining.State>
   ) {}
 

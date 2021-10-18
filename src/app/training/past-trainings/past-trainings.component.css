@@ -1,0 +1,20 @@
+.material-icons-outlined{
+  align-content: center;
+}
+
+.mat-header-cell{
+  background-color: #e9e9a6;
+  color: black;
+}
+
+.mat-raised-button{
+  margin-top: 25px;
+}
+
+xls{
+    margin-left:80%;
+}
+
+pdf{
+  margin-left:20px;
+}

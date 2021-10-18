@@ -1,16 +1,49 @@
 <section>
-  <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" #f="ngForm" (ngSubmit)="onSubmit(f)">
-    <mat-form-field>
-      <input type="email" matInput placeholder="Your email" ngModel name="email" email required #emailInput="ngModel">
-      <mat-error *ngIf="emailInput.hasError('required')">Field must not be empty.</mat-error>
-      <mat-error *ngIf="!emailInput.hasError('required')">E-Mail is invalid.</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input type="password" matInput placeholder="Your password" ngModel name="password" required minlength="6" #pwInput="ngModel">
-      <!-- <mat-hint align="end">{{ pwInput.value?.length }} /6</mat-hint> -->
-      <mat-error>Has to be at least 6 characters long.</mat-error>
-    </mat-form-field>
-    <button *ngIf="!isLoading" type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Submit</button>
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
-  </form>
+  <div class="row no-gutters">
+
+    <div class="col-md-6 no-gutters">
+      <div class="rightside">
+        <form
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            fxLayoutGap="10px"
+            [formGroup]="loginForm"
+            (ngSubmit)="onSubmit()">
+            <h2>Hey....Welcome</h2>
+            <h3>Login Now</h3>
+            <h4>Login if you have an account in here</h4>
+            <mat-form-field>
+              <input
+                type="email"
+                matInput
+                placeholder="Your email"
+                formControlName="email">
+              <mat-hint>Please enter a valid email.</mat-hint>
+              <mat-error>Invalid or missing email.</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                type="password"
+                matInput
+                placeholder="Your password"
+                formControlName="password">
+              <mat-hint>Please enter your password.</mat-hint>
+              <mat-error>Missing password.</mat-error>
+            </mat-form-field>
+            <button *ngIf="!(isLoading$ | async)" type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">Submit</button>
+            <!-- <mat-spinner ></mat-spinner> -->
+        <lottie-player *ngIf="isLoading$ | async" src="https://assets7.lottiefiles.com/packages/lf20_frdtxW.json"  background="transparent"  speed="2"  style="width: 300px; height: 300px;"  loop autoplay></lottie-player>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-6 no-gutters" fxHide.xs>
+      <div class="leftside">
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_xlmz9xwm.json"  background="transparent"  speed="1" style="width: 500px; height: 500px;"    loop  autoplay></lottie-player>
+      </div>
+    </div>
+
+  </div>
 </section>
+

@@ -1,24 +1,33 @@
-import { NgModule } from "@angular/core";
-import { SharedModule } from "../shared/shared.module";
-import { CurrentTrainingComponent } from "./current-training/current-training.component";
-import { StopTrainingComponent } from "./current-training/stop-training.component";
-import { NewTrainingComponent } from "./new-training/new-training.component";
-import { PastTrainingsComponent } from "./past-trainings/past-trainings.component";
-import { TrainingRoutingModule } from "./training-routing.module";
-import { TrainingComponent } from "./training.component";
-
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'; //for adding animations
+import { StoreModule } from '@ngrx/store';
+import { TrainingComponent } from './training.component';
+import { NewTrainingComponent } from './new-training/new-training.component';
+import { PastTrainingsComponent } from './past-trainings/past-trainings.component';
+import { StopTrainingComponent } from './current-training/stop-training.component';
+import { SharedModule } from '../shared/shared.module';
+import { TrainingRoutingModule } from './training-routing.module';
+import { trainingReducer } from './training.reducer';
+import { CurrentTrainingComponent } from './current-training/current-training.component';
+import { ExcelService } from './excel.service';
+import { FormsModule } from '@angular/forms';
 @NgModule({
-  declarations:[
+  declarations: [
     TrainingComponent,
     CurrentTrainingComponent,
     NewTrainingComponent,
     PastTrainingsComponent,
     StopTrainingComponent
   ],
-  imports:[
+  imports: [
     SharedModule,
-    TrainingRoutingModule
+    TrainingRoutingModule,
+    StoreModule.forFeature('training', trainingReducer),
+    FormsModule
   ],
-  entryComponents : [StopTrainingComponent]
+  entryComponents: [StopTrainingComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [ExcelService]
 })
-export class TrainingModule{}
+export class TrainingModule {
+  constructor () {};
+}

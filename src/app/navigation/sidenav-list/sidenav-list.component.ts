@@ -7,7 +7,7 @@ import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-sidenav-list',
-  templateUrl: './sidenav-list.component.html',
+  templateUrl:'./sidenav-list.component.html',
   styleUrls: ['./sidenav-list.component.css']
 })
 export class SidenavListComponent implements OnInit {

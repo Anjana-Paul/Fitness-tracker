@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
 import { TrainingService } from '../training.service';

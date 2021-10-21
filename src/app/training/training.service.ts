@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+//import { AngularFirestore } from 'angularfire2/firestore';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+//import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/map';
+import { map, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 import { Exercise } from './exercise.model';
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
 import * as Training from './training.actions';
 import * as fromTraining from './training.reducer';
+
+import { orderBy} from "lodash"
 
 @Injectable()
 export class TrainingService {
@@ -32,7 +37,6 @@ export class TrainingService {
           return docArray.map(doc => {
             return {
               id: doc.payload.doc.id,
-              date: doc.payload.doc.data()['date'],
               name: doc.payload.doc.data()['name'],
               duration: doc.payload.doc.data()['duration'],
               calories: doc.payload.doc.data()['calories']
@@ -87,7 +91,7 @@ export class TrainingService {
   fetchCompletedOrCancelledExercises() {
     this.fbSubs.push(
       this.db
-        .collection('finishedExercises')
+        .collection("finishedExercises")
         .valueChanges()
         .subscribe((exercises: Exercise[]) => {
           this.store.dispatch(new Training.SetFinishedTrainings(exercises));

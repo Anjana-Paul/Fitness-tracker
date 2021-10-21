@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 import { Store } from '@ngrx/store';
+import { firestore } from 'firebase';
 
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
@@ -12,21 +13,26 @@ import { ExcelService } from '../excel.service';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
-
+//import Timestamp = firebase.firestore.Timestamp;
+import * as firebase from 'firebase';
+//import { timestamp } from 'rxjs-compat/operator/timestamp';
+//import { Time } from '@angular/common';
+import Timestamp = firebase.firestore.Timestamp;
+import { combineAll } from 'rxjs-compat/operator/combineAll';
 @Component({
   selector: 'app-past-trainings',
   templateUrl: './past-trainings.component.html',
   styleUrls: ['./past-trainings.component.css']
 })
+
 export class PastTrainingsComponent
   implements OnInit, AfterViewInit {
   displayedColumns = ['date', 'name', 'duration', 'calories', 'state'];
-
   newarray=[]
   dataSource = new MatTableDataSource<Exercise>();
   head = [this.displayedColumns];
-  datas = [['ghg','ghjghj'],['ghgh','hvdv']]
-  newdata = []
+  newdata = [];
+  fire_date;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
@@ -34,19 +40,18 @@ export class PastTrainingsComponent
     private trainingService: TrainingService,
     private store: Store<fromTraining.State>,
     private excelService : ExcelService,
+    //private timestamp: Timestamp
   ) {}
 
   ngOnInit() {
-    const timestamp= {nanoseconds: 816000000,
-      seconds: 816000000}
-    console.log(new Date(timestamp.nanoseconds));
     this.store.select(fromTraining.getFinishedExercises).subscribe(
       (exercises: Exercise[]) => {
         this.dataSource.data = exercises;
-       // console.log(this.dataSource.data);
       }
     );
     this.trainingService.fetchCompletedOrCancelledExercises();
+
+
   }
 
   ngAfterViewInit() {
@@ -60,8 +65,7 @@ export class PastTrainingsComponent
   }
 
   exportAsXLSX() {
-    this.excelService.exportAsExcelFile(this.dataSource.data, 'training_data');
-
+    this.excelService.exportAsExcelFile(this.newdata, 'training_data');
   }
 
   createPdf() {
@@ -71,11 +75,11 @@ export class PastTrainingsComponent
     doc.text('My Past Exercises', 11, 8);
     doc.setFontSize(20);
     doc.setTextColor('black');
-
-
-    for (let i =0 ; i<52 ; i++){
+    let date = this.dataSource.data[0]['date'];
+    let len = (this.dataSource.data).length;
+    for (let i =0 ; i<len ; i++){
       this.newdata.push ([
-        this.dataSource.data[i]['date'],
+        this.fire_date = this.dataSource.data[i]['date'],
         this.dataSource.data[i]['name'],
         this.dataSource.data[i]['duration'],
         this.dataSource.data[i]['calories'],
@@ -85,15 +89,23 @@ export class PastTrainingsComponent
 
     (doc as any).autoTable({
       head: this.head,
-      body: this.newdata ,
-      theme:"plain"
+      body: this.newdata,
+    //  theme:"plain"
 
     })
     doc.output('dataurlnewwindow');  // to Open PDF document in new tab
     doc.save('my_exercises.pdf'); //Download PDF document
-    console.log(this.newdata);
-
+    this.newdata=[];
   }
+
+  convertTimestampToDate(timestamp: Timestamp | any): Date | any {
+    console.log( timestamp instanceof Timestamp
+      ? new Timestamp(1632374229, 756000000).toDate()
+      : timestamp
+     ) }
+
+
+
 }
 
 

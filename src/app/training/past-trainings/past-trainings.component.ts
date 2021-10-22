@@ -65,7 +65,7 @@ export class PastTrainingsComponent
   }
 
   exportAsXLSX() {
-    this.excelService.exportAsExcelFile(this.newdata, 'training_data');
+    this.excelService.exportAsExcelFile(this.dataSource.data, 'training_data');
   }
 
   createPdf() {
@@ -102,10 +102,8 @@ export class PastTrainingsComponent
     console.log( timestamp instanceof Timestamp
       ? new Timestamp(1632374229, 756000000).toDate()
       : timestamp
-     ) }
-
-
-
+     )
+  }
 }
 
 

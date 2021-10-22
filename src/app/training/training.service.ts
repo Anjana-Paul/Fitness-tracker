@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 //import { AngularFirestore } from 'angularfire2/firestore';
 import { Subscription } from 'rxjs';
-//import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/map';
-import { map, take } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 import { Exercise } from './exercise.model';
@@ -13,8 +11,6 @@ import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
 import * as Training from './training.actions';
 import * as fromTraining from './training.reducer';
-
-import { orderBy} from "lodash"
 
 @Injectable()
 export class TrainingService {
@@ -68,7 +64,7 @@ export class TrainingService {
     this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe(ex => {
       this.addDataToDatabase({
         ...ex,
-        date: new Date(),
+        date: (new Date).toString(),
         state: 'completed'
       });
       this.store.dispatch(new Training.StopTraining());
@@ -79,9 +75,9 @@ export class TrainingService {
     this.store.select(fromTraining.getActiveTraining).pipe(take(1)).subscribe(ex => {
       this.addDataToDatabase({
         ...ex,
-        duration: ex.duration * (progress / 100),
+        duration: Math.ceil(ex.duration * (progress / 100)),
         calories: ex.calories * (progress / 100),
-        date: new Date(),
+        date: (new Date).toString(),
         state: 'cancelled'
       });
       this.store.dispatch(new Training.StopTraining());

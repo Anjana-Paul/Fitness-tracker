@@ -1,6 +1,7 @@
-<section class="new-training" fxLayout="column" fxLayoutAlign="center center">
-  <mat-progress-spinner mode="determinate" [value]="progress"></mat-progress-spinner>
-  <h1>{{progress}}%</h1>
-  <p>Keep on going..you can do it.!!</p>
-  <button mat-raised-button color="accent" (click)='onStop()'>Stop</button>
+<section class="current-training" fxLayout="column" fxLayoutAlign="center center">
+    <mat-progress-spinner mode="determinate" [value]="progress"></mat-progress-spinner>
+    <h1>{{ progress }}%</h1>
+    <p>Keep on going, you can do it!</p>
+<lottie-player src="https://assets9.lottiefiles.com/packages/lf20_ocGoFt.json"  background="transparent"  speed="1"  style="width: 250px; height: 250px;" loop  autoplay></lottie-player>
+<button mat-raised-button color="accent" (click)="onStop()">Stop</button>
 </section>

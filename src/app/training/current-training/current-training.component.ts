@@ -14,9 +14,12 @@ import * as fromTraining from '../training.reducer';
 export class CurrentTrainingComponent implements OnInit {
   progress = 0;
   timer: any;
-  constructor(private dialog: MatDialog,
-     private trainingService: TrainingService,
-     private store : Store<fromTraining.State>) { }
+
+  constructor(
+    private dialog: MatDialog,
+    private trainingService: TrainingService,
+    private store: Store<fromTraining.State>
+  ) {}
 
   ngOnInit() {
     this.startOrResumeTimer();
@@ -38,17 +41,17 @@ export class CurrentTrainingComponent implements OnInit {
   onStop() {
     clearInterval(this.timer);
     const dialogRef = this.dialog.open(StopTrainingComponent, {
-      data:{
-      progress: this.progress
+      data: {
+        progress: this.progress
       }
     });
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.trainingService.cancelExercise(this.progress);
-      } else{
+      } else {
         this.startOrResumeTimer();
       }
     });
   }
-
 }

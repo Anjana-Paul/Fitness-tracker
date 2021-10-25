@@ -10,7 +10,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
+        <lottie-player *ngIf="isLoading$ | async" src="https://assets10.lottiefiles.com/packages/lf20_vyx5qwny.json"  background="transparent"  speed="2"  style="width: 175px; height: 175px;"  loop  autoplay></lottie-player>
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center" *ngIf="!(isLoading$ | async)">
         <button *ngIf="exercises$ | async" type="submit" mat-button [disabled]="f.invalid">Start</button>

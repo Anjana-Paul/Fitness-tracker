@@ -1,28 +1,30 @@
-import { Injectable } from "@angular/core";
-import { AngularFireAuth } from "@angular/fire/auth";
-import { Router } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { UIService } from "../shared/ui.service";
-import { TrainingService } from "../training/training.service";
-import { AuthData } from "./auth-data.model";
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+
+import { User } from './user.model';
+import { AuthData } from './auth-data.model';
+import { TrainingService } from '../training/training.service';
+import { UIService } from '../shared/ui.service';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    private router: Router,
+    private afAuth: AngularFireAuth,
+    private trainingService: TrainingService,
+    private uiService: UIService,
+    private store: Store<fromRoot.State>
+  ) {}
 
-
-  constructor(private router: Router ,
-     private afAuth :AngularFireAuth,
-     private trainingService: TrainingService,
-     private uiService: UIService,
-     private store: Store<fromRoot.State>
-     ){}
-
-  initAuthListener(){
+  initAuthListener() {
     this.afAuth.authState.subscribe(user => {
-      if( user) {
+      if (user) {
         this.store.dispatch(new Auth.SetAuthenticated());
         this.router.navigate(['/training']);
       } else {
@@ -33,58 +35,44 @@ export class AuthService {
     });
   }
 
-  registerUser(authData: AuthData){
-    //this.uiService.loadingStateChanged.next(true);
+  registerUser(authData: AuthData) {
+    // this.uiService.loadingStateChanged.next(true);
     this.store.dispatch(new UI.StartLoading());
-    this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
-    .then(result => {
-      this.SendVerificationMail(); // Sending email verification notification, when new user registers
-      //this.uiService.loadingStateChanged.next(false);
-      this.store.dispatch(new UI.StopLoading());
-      // this.afAuth.sendSignInLinkToEmail(formData["email"]);
-    })
-    .catch(error => {
-     // this.uiService.loadingStateChanged.next(false);
-      this.store.dispatch(new UI.StopLoading());
-      this.uiService.showSnackbar(error.message, null, 3000)
-    });
+    this.afAuth.auth
+      .createUserWithEmailAndPassword(authData.email, authData.password)
+      .then(result => {
+        // this.uiService.loadingStateChanged.next(false);
+        this.SendVerificationMail();
+        this.store.dispatch(new UI.StopLoading());
+      })
+      .catch(error => {
+        // this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
+        this.uiService.showSnackbar(error.message, null, 3000);
+      });
   }
 
-  // Send email verification when new user sign up
-  SendVerificationMail() {
+  SendVerificationMail(){
     return this.afAuth.auth.currentUser.sendEmailVerification();
   }
 
-  login(authData : AuthData) {
-    //this.uiService.loadingStateChanged.next(true);
-    this.store.dispatch({type: 'START_LOADING'});
-    this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password).then(result => {
+  login(authData: AuthData) {
+    // this.uiService.loadingStateChanged.next(true);
+    this.store.dispatch(new UI.StartLoading());
+    this.afAuth.auth
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      .then(result => {
+        // this.uiService.loadingStateChanged.next(false);
         this.store.dispatch(new UI.StopLoading());
-    })
-    .catch(error => {
-    //  this.uiService.loadingStateChanged.next(false);
-      this.store.dispatch({type: 'STOP_LOADING'});
-      this.uiService.showSnackbar(error.message, null, 3000)
-    });
+      })
+      .catch(error => {
+        // this.uiService.loadingStateChanged.next(false);
+        this.store.dispatch(new UI.StopLoading());
+        this.uiService.showSnackbar(error.message, null, 3000);
+      });
   }
 
-  //Reset Password Function
-  // ForgotPassword(passwordResetEmail) {
-  //   return this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail)
-  //   .then(() => {
-  //     window.alert('Password reset email sent, check your inbox.');
-  //   }).catch((error) => {
-  //     window.alert(error);
-  //   });
-  // }
-
-  logout(){
+  logout() {
     this.afAuth.auth.signOut();
   }
 }
-
-
-
-
-
-// time < timestamp.date(2021, 10, 20);

@@ -32,6 +32,7 @@ export class TrainingService {
           return docArray.map(doc => {
             return {
               id: doc.payload.doc.id,
+              date: doc.payload.doc.data()['date'],
               name: doc.payload.doc.data()['name'],
               duration: doc.payload.doc.data()['duration'],
               calories: doc.payload.doc.data()['calories']
@@ -89,7 +90,7 @@ export class TrainingService {
         .collection('finishedExercises')
         .valueChanges()
         .subscribe((exercises: Exercise[]) => {
-          this.store.dispatch(new Training.SetFinishedTrainings(exercises));//bug occured n fixed
+          this.store.dispatch(new Training.SetFinishedTrainings(exercises));
         })
     );
   }

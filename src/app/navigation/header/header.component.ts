@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Observable} from 'rxjs';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+
 import * as fromRoot from '../../app.reducer';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -11,11 +12,11 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class HeaderComponent implements OnInit {
   @Output() sidenavToggle = new EventEmitter<void>();
-  isAuth$ : Observable<boolean>;
+  isAuth$: Observable<boolean>;
 
   constructor(private store: Store<fromRoot.State>, private authService: AuthService) { }
 
-  ngOnInit(){
+  ngOnInit() {
     this.isAuth$ = this.store.select(fromRoot.getIsAuth);
   }
 
@@ -23,7 +24,7 @@ export class HeaderComponent implements OnInit {
     this.sidenavToggle.emit();
   }
 
-  onLogout(){
+  onLogout() {
     this.authService.logout();
   }
 }

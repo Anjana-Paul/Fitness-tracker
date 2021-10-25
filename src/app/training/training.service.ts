@@ -92,7 +92,7 @@ export class TrainingService {
         .subscribe((exercises: Exercise[]) => {
           this.store.dispatch(new Training.SetFinishedTrainings(exercises));
         })
-    );
+    );3
   }
 
   cancelSubscriptions() {

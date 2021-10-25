@@ -17,7 +17,16 @@ export class ExcelService {
     const excelBuffer: any = XLSX.write(myworkbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);
   }
-
+  // Adjust column width
+    wscols = [
+      { wch: 100 },
+      { wch: 100 },
+      { wch: 100 },
+      { wch: 100 },
+      { wch: 100 },
+      { wch: 100 }
+    ];
+  myworksheet:any["cols"] = this.wscols;
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], {
       type: EXCEL_TYPE

@@ -37,9 +37,8 @@ export class PastTrainingsComponent
   ) {}
 
   ngOnInit() {
-    const timestamp= {nanoseconds: 816000000,
-      seconds: 816000000}
-    console.log(new Date(timestamp.nanoseconds));
+    const timestamp=1587143959831;
+    console.log(new Date(timestamp).toLocaleDateString("en-us"));
     this.store.select(fromTraining.getFinishedExercises).subscribe(
       (exercises: Exercise[]) => {
         this.dataSource.data = exercises;
@@ -61,7 +60,8 @@ export class PastTrainingsComponent
 
   exportAsXLSX() {
     this.excelService.exportAsExcelFile(this.dataSource.data, 'training_data');
-
+    const fire_date= this.dataSource.data[0].date.toLocaleDateString;
+    console.log(fire_date)
   }
 
   createPdf() {
@@ -72,8 +72,9 @@ export class PastTrainingsComponent
     doc.setFontSize(20);
     doc.setTextColor('black');
 
+    const len = (this.dataSource.data).length;
 
-    for (let i =0 ; i<52 ; i++){
+    for (let i =0 ; i<len ; i++){
       this.newdata.push ([
         this.dataSource.data[i]['date'],
         this.dataSource.data[i]['name'],
@@ -87,12 +88,10 @@ export class PastTrainingsComponent
       head: this.head,
       body: this.newdata ,
       theme:"plain"
-
     })
     doc.output('dataurlnewwindow');  // to Open PDF document in new tab
     doc.save('my_exercises.pdf'); //Download PDF document
     console.log(this.newdata);
-
   }
 }
 
